@@ -286,6 +286,22 @@
             \end{highlights}
         \end{onecolentry}
 
+
+        \begin{twocolentry}{
+            \href{https://github.com/Souvikns/asyncapi-rag}{github.com/Souvikns/AsyncAPI-RAG}
+        }
+            \textbf{FastAPI application that scrapes AsyncAPI documentation to create a RAG system and provides a chat API to answer user queries.}\end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Built data scrapper to scrape AsyncAPI spec and tools documentation from github.
+                \item Used LangChain to chunk Markdown data, generated embeddings with the Nomic embed model from Ollama, stored embeddings in a Qdrant database, and exposed a REST API to handle user queries and return contextual answers.
+                \item Tools Used: Python, qdrant, Langchain, ollama, docker 
+                
+            \end{highlights}
+        \end{onecolentry}
+
     
     \section{Technologies}
 
