@@ -8,7 +8,7 @@
     left=2 cm, % seperation between body and page edge from the left
     right=2 cm, % seperation between body and page edge from the right
     footskip=1.0 cm, % seperation between body and footer
-    % showframe % for debugging 
+    % showframe % for debugging
 ]{geometry} % for adjusting page geometry
 \usepackage{titlesec} % for customizing section titles
 \usepackage{tabularx} % for making tables with fixed width columns
@@ -195,12 +195,12 @@
 
 
 
-        
+
         \begin{onecolentry}
           I design and build backend systems and AI infrastructure for production environments. My work focuses on RAG architectures, vector search systems, and LLM orchestration across Go, TypeScript, and Python. I’ve shipped developer tooling adopted by 16,000+ users and contribute to open source as an AsyncAPI maintainer and Google Summer of Code mentor.
         \end{onecolentry}
 
-    
+
     \section{Experience}
 
 
@@ -217,7 +217,7 @@
 
             \end{highlights}
         \end{onecolentry}
-        
+
         \begin{twocolentry}{
             December 2024 – May 2025
         }
@@ -228,11 +228,11 @@
             \begin{highlights}
                 \item Engineered an enhanced search algorithm for Swagger files, optimizing RAG system performance and search precision.
                 \item Implemented CI/CD pipeline utilizing GitHub Actions to automate application release cycles, enhancing deployment efficiency and reliability.
-                
+
                 \item Optimized a local server utilized by our VS Code extension, achieving over 30\% improvement in startup time and enhancing overall user experience.
 
                 \item Implemented automated deployment from GitHub Actions to a virtual machine (VM) and configured branch protection rules, improving code quality, deployment stability, and increasing team productivity by eliminating manual deployment efforts.
-                
+
             \end{highlights}
         \end{onecolentry}
 
@@ -250,9 +250,9 @@
                 \item Developed and maintained a cross-platform CLI integrating official AsyncAPI tooling, providing a unified workflow for developers.
                 \item Created and maintained AsyncAPI Bundler (16,000+ downloads), enabling reliable resolution of complex json ref dependency graphs across specification files.
                 \item Served as maintainer across 3+ open-source projects, reviewing contributions, guiding architectural decisions, and driving roadmap initiatives.
-                \item Mentored contributors under Google Summer of Code (GSoC), guiding projects to production-ready completion. 
+                \item Mentored contributors under Google Summer of Code (GSoC), guiding projects to production-ready completion.
                 \item Co-led governance initiative to standardize parser tooling architecture across multiple languages, improving maintainability and reducing duplication.
-                
+
             \end{highlights}
         \end{onecolentry}
 
@@ -266,16 +266,30 @@
         \vspace{0.10 cm}
         \begin{onecolentry}
             \begin{highlights}
-                \item Built microservices in Go to automate cloud infrastructure provisioning using templated configuration systems. 
+                \item Built microservices in Go to automate cloud infrastructure provisioning using templated configuration systems.
                 \item Developed a React-based low-code interface for generating and provisioning infrastructure on demand.
                 \item Deployed containerized services using Docker and Kubernetes in cloud-native environments.
-                
+
             \end{highlights}
         \end{onecolentry}
-    
+
     \vspace {1 cm}
-    
+
     \section{Projects}
+
+        \begin{twocolentry}{
+            \href{https://github.com/Souvikns/kitsu}{Kitsu}
+        }
+            \textbf{GitHub Action that would run generate PR summary using AI.}\end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+            \item Uses AI to generate PR summary with respect of the patch file.
+            \item Handles Large context files like package-lock file for nodejs. 
+
+            \end{highlights}
+        \end{onecolentry}
 
         \begin{twocolentry}{
             \href{https://github.com/Souvikns/Notion-Board}{Notion-Board}
@@ -288,7 +302,7 @@
                 \item Developed a GitHub Action to auto sync and update github issues and it's state with Notion Pages.
                 \item Earned recognition from the open-source community through project stars and valuable user feedback.
                 \item Tools Used: Typescript, GH Action.
-                
+
             \end{highlights}
         \end{onecolentry}
 
@@ -303,17 +317,17 @@
             \begin{highlights}
                 \item Built data scrapper to scrape AsyncAPI spec and tools documentation from github.
                 \item Used LangChain to chunk Markdown data, generated embeddings with the Nomic embed model from Ollama, stored embeddings in a Qdrant database, and exposed a REST API to handle user queries and return contextual answers.
-                \item Tools Used: Python, qdrant, Langchain, ollama, docker 
-                
+                \item Tools Used: Python, qdrant, Langchain, ollama, docker
+
             \end{highlights}
         \end{onecolentry}
 
-    
+
     \section{Technologies}
 
 
 
-        
+
         \begin{onecolentry}
             \textbf{Languages:} Javascript, Typescript, Go, Python, SQL
         \end{onecolentry}
@@ -337,10 +351,10 @@
         \begin{onecolentry}
           \textbf{DevOps:} Docker, GitHub Actions, CI/CD
         \end{onecolentry}
-    
+
     \section{Education}
 
-        
+
         \begin{twocolentry}{
             June 2018 – June 2022
         }
@@ -355,6 +369,6 @@
 
 
 
-    
+
 
 \end{document}
