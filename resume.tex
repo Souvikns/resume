@@ -134,13 +134,15 @@
     \par\kern\topsep
 } % new environment for the header
 
-\newcommand{\placelastupdatedtext}{% \placetextbox{<horizontal pos>}{<vertical pos>}{<stuff>}
-  \AddToShipoutPictureFG*{% Add <stuff> to current page foreground
+\newsavebox{\lastupdatedbox}
+\sbox{\lastupdatedbox}{\small\color{gray}\textit{Last updated in July 2026}}
+\newcommand{\placelastupdatedtext}{%
+  \AddToShipoutPictureFG*{%
     \put(
         \LenToUnit{\paperwidth-2 cm-0 cm+0.05cm},
         \LenToUnit{\paperheight-1.0 cm}
-    ){\vtop{{\null}\makebox[0pt][c]{
-        \small\color{gray}\textit{Last updated in September 2024}\hspace{\widthof{Last updated in September 2024}}
+    ){\vtop{{\null}\makebox[0pt][c]{%
+        \usebox{\lastupdatedbox}\hspace{\wd\lastupdatedbox}%
     }}}%
   }%
 }%
@@ -177,7 +179,7 @@
         \kern 5.0 pt%
         \AND%
         \kern 5.0 pt%
-        \mbox{\hrefWithoutArrow{https://souvik.de/}{souvikns.de}}%
+        \mbox{\hrefWithoutArrow{https://souvik.de/}{souvik.de}}%
         \kern 5.0 pt%
         \AND%
         \kern 5.0 pt%
@@ -188,7 +190,7 @@
         \mbox{\hrefWithoutArrow{https://github.com/Souvikns/}{github/Souvikns}}%
     \end{header}
 
-    \vspace{5 pt - 0.3 cm}
+    \vspace{0.2 cm}
 
 
     \section{Summary}
@@ -274,7 +276,7 @@
             \end{highlights}
         \end{onecolentry}
 
-    \vspace {1 cm}
+    \vspace{1 cm}
 
     \section{Projects}
 
@@ -301,9 +303,9 @@
         \vspace{0.10 cm}
         \begin{onecolentry}
             \begin{highlights}
-                \item Developed a GitHub Action to auto sync and update github issues and it's state with Notion Pages.
+                \item Developed a GitHub Action to auto sync and update GitHub issues and its state with Notion Pages.
                 \item Earned recognition from the open-source community through project stars and valuable user feedback.
-                \item Tools Used: Typescript, GH Action.
+                \item Tools Used: TypeScript, GitHub Actions.
 
             \end{highlights}
         \end{onecolentry}
@@ -317,7 +319,7 @@
         \vspace{0.10 cm}
         \begin{onecolentry}
             \begin{highlights}
-                \item Built data scrapper to scrape AsyncAPI spec and tools documentation from github.
+                \item Built data scraper to scrape AsyncAPI spec and tools documentation from GitHub.
                 \item Used LangChain to chunk Markdown data, generated embeddings with the Nomic embed model from Ollama, stored embeddings in a Qdrant database, and exposed a REST API to handle user queries and return contextual answers.
                 \item Tools Used: Python, qdrant, Langchain, ollama, docker
 
@@ -331,7 +333,7 @@
 
 
         \begin{onecolentry}
-            \textbf{Languages:} Javascript, Typescript, Go, Python, SQL
+            \textbf{Languages:} JavaScript, TypeScript, Go, Python, SQL
         \end{onecolentry}
 
         \vspace{0.2 cm}
@@ -365,7 +367,7 @@
         \vspace{0.10 cm}
         \begin{onecolentry}
             \begin{highlights}
-                \item \textbf{Coursework:} Computer Architecture, Comparison of Learning Algorithms, Computational Theory
+                \item \textbf{Coursework:} Data Structures \& Algorithms, Operating Systems, Computer Networks, Software Engineering, System Design
             \end{highlights}
         \end{onecolentry}
 
