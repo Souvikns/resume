@@ -2,377 +2,274 @@
 
 % Packages:
 \usepackage[
-    ignoreheadfoot, % set margins without considering header and footer
-    top=2 cm, % seperation between body and page edge from the top
-    bottom=2 cm, % seperation between body and page edge from the bottom
-    left=2 cm, % seperation between body and page edge from the left
-    right=2 cm, % seperation between body and page edge from the right
-    footskip=1.0 cm, % seperation between body and footer
-    % showframe % for debugging
-]{geometry} % for adjusting page geometry
-\usepackage{titlesec} % for customizing section titles
-\usepackage{tabularx} % for making tables with fixed width columns
-\usepackage{array} % tabularx requires this
-\usepackage[dvipsnames]{xcolor} % for coloring text
-\definecolor{primaryColor}{RGB}{0, 0, 0} % define primary color
-\usepackage{enumitem} % for customizing lists
-\usepackage{fontawesome5} % for using icons
-\usepackage{amsmath} % for math
+    ignoreheadfoot,
+    top=36pt,
+    bottom=30pt,
+    left=0pt,
+    right=0pt,
+    footskip=0pt,
+]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{tikz}
 \usepackage[
     pdftitle={Souvik De's CV},
     pdfauthor={Souvik De},
-    pdfcreator={LaTeX with RenderCV},
+    pdfcreator={LaTeX},
     colorlinks=true,
-    urlcolor=primaryColor
-]{hyperref} % for links, metadata and bookmarks
-\usepackage[pscoord]{eso-pic} % for floating text on the page
-\usepackage{calc} % for calculating lengths
-\usepackage{bookmark} % for bookmarks
-\usepackage{lastpage} % for getting the total number of pages
-\usepackage{changepage} % for one column entries (adjustwidth environment)
-\usepackage{paracol} % for two and three column entries
-\usepackage{ifthen} % for conditional statements
-\usepackage{needspace} % for avoiding page brake right after the section title
-\usepackage{iftex} % check if engine is pdflatex, xetex or luatex
+]{hyperref}
+\usepackage[pscoord]{eso-pic}
+\usepackage{calc}
+\usepackage{bookmark}
+\usepackage{changepage}
+\usepackage{paracol}
+\usepackage{needspace}
+\usepackage{fontspec}
 
-% Ensure that generate pdf is machine readable/ATS parsable:
-\ifPDFTeX
-    \input{glyphtounicode}
-    \pdfgentounicode=1
-    \usepackage[T1]{fontenc}
-    \usepackage[utf8]{inputenc}
-    \usepackage{lmodern}
-\fi
+% ---- Palette (RESUME-SPEC.md) ----
+\definecolor{primaryColor}{HTML}{1B1A16}   % body text
+\definecolor{bulletColor}{HTML}{33312B}    % bullet text
+\definecolor{secondaryColor}{HTML}{4F4C44} % company / place lines
+\definecolor{mutedColor}{HTML}{85806F}     % dates, sidebar labels
+\definecolor{sidebarTint}{HTML}{F2EFE8}    % sidebar background
+\definecolor{accentColor}{HTML}{3B6BB0}    % section heads, name rule, links
 
-\usepackage{charter}
+\hypersetup{urlcolor=accentColor, linkcolor=accentColor}
+
+% ---- Fonts: Source Sans 3 (successor to Source Sans Pro), bundled in
+% fonts/ so the build doesn't depend on what's installed on the machine
+% or CI runner. Requires xelatex or lualatex (see fonts/README.md). ----
+\setmainfont{SourceSans3}[
+    Path = fonts/,
+    Extension = .otf,
+    UprightFont = *-Regular,
+    BoldFont = *-Bold,
+    ItalicFont = *-It,
+    BoldItalicFont = *-BoldIt,
+]
+\newcommand{\letterspacedcaps}[1]{\addfontfeature{LetterSpace=18.0}\MakeUppercase{#1}}
 
 % Some settings:
 \raggedright
-\AtBeginEnvironment{adjustwidth}{\partopsep0pt} % remove space before adjustwidth environment
-\pagestyle{empty} % no header or footer
-\setcounter{secnumdepth}{0} % no section numbering
-\setlength{\parindent}{0pt} % no indentation
-\setlength{\topskip}{0pt} % no top skip
-\setlength{\columnsep}{0.15cm} % set column seperation
-\pagenumbering{gobble} % no page numbering
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt}
+\pagestyle{empty}
+\setcounter{secnumdepth}{0}
+\setlength{\parindent}{0pt}
+\setlength{\topskip}{0pt}
+\pagenumbering{gobble}
 
-\titleformat{\section}{\needspace{4\baselineskip}\bfseries\large}{}{0pt}{}[\vspace{1pt}\titlerule]
-
-\titlespacing{\section}{
-    % left space:
-    -1pt
-}{
-    % top space:
-    0.3 cm
-}{
-    % bottom space:
-    0.2 cm
-} % section title spacing
-
-\renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$} % custom bullet points
-\newenvironment{highlights}{
-    \begin{itemize}[
-        topsep=0.10 cm,
-        parsep=0.10 cm,
-        partopsep=0pt,
-        itemsep=0pt,
-        leftmargin=0 cm + 10pt
-    ]
-}{
-    \end{itemize}
-} % new environment for highlights
-
-
-\newenvironment{highlightsforbulletentries}{
-    \begin{itemize}[
-        topsep=0.10 cm,
-        parsep=0.10 cm,
-        partopsep=0pt,
-        itemsep=0pt,
-        leftmargin=10pt
-    ]
-}{
-    \end{itemize}
-} % new environment for highlights for bullet entries
-
-\newenvironment{onecolentry}{
-    \begin{adjustwidth}{
-        0 cm + 0.00001 cm
-    }{
-        0 cm + 0.00001 cm
-    }
-}{
-    \end{adjustwidth}
-} % new environment for one column entries
-
-\newenvironment{twocolentry}[2][]{
-    \onecolentry
-    \def\secondColumn{#2}
-    \setcolumnwidth{\fill, 4.5 cm}
-    \begin{paracol}{2}
-}{
-    \switchcolumn \raggedleft \secondColumn
-    \end{paracol}
-    \endonecolentry
-} % new environment for two column entries
-
-\newenvironment{threecolentry}[3][]{
-    \onecolentry
-    \def\thirdColumn{#3}
-    \setcolumnwidth{, \fill, 4.5 cm}
-    \begin{paracol}{3}
-    {\raggedright #2} \switchcolumn
-}{
-    \switchcolumn \raggedleft \thirdColumn
-    \end{paracol}
-    \endonecolentry
-} % new environment for three column entries
-
-\newenvironment{header}{
-    \setlength{\topsep}{0pt}\par\kern\topsep\centering\linespread{1.5}
-}{
-    \par\kern\topsep
-} % new environment for the header
-
-\newsavebox{\lastupdatedbox}
-\sbox{\lastupdatedbox}{\small\color{gray}\textit{Last updated in July 2026}}
-\newcommand{\placelastupdatedtext}{%
-  \AddToShipoutPictureFG*{%
-    \put(
-        \LenToUnit{\paperwidth-2 cm-0 cm+0.05cm},
-        \LenToUnit{\paperheight-1.0 cm}
-    ){\vtop{{\null}\makebox[0pt][c]{%
-        \usebox{\lastupdatedbox}\hspace{\wd\lastupdatedbox}%
-    }}}%
-  }%
-}%
-
-% save the original href command in a new command:
 \let\hrefWithoutArrow\href
 
-% new command for external links:
+% ---- Sidebar geometry ----
+\newlength{\sidebarwidth}
+\setlength{\sidebarwidth}{0.287\paperwidth}
+\columnratio{0.287}
+\setlength{\columnsep}{0pt}
+\setlength{\columnseprule}{0pt}
 
+% Paint the sidebar tint full-bleed, full page height, on every page.
+\AddToShipoutPictureBG{%
+    \begin{tikzpicture}[remember picture, overlay]
+        \fill[sidebarTint] (current page.north west) rectangle
+            ++(\sidebarwidth, -\paperheight);
+    \end{tikzpicture}%
+}
+
+% ---- Section head: 7.6pt bold uppercase letterspaced accent ----
+\newcommand{\sectionhead}[1]{%
+    \needspace{3\baselineskip}%
+    {\fontsize{7.6pt}{9pt}\selectfont\bfseries\color{accentColor}\letterspacedcaps{#1}}\par
+    \vspace{7pt}%
+}
+
+% ---- Entry title + right-aligned date/link on one line ----
+\newlength{\entrysidewidth}
+\newcommand{\entryhead}[2]{%
+    \setlength{\entrysidewidth}{3.1cm}%
+    \noindent\begin{minipage}[t]{\dimexpr\linewidth-\entrysidewidth\relax}
+        \raggedright\fontsize{10.2pt}{12.5pt}\selectfont\bfseries\color{primaryColor}#1
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[t]{\entrysidewidth}
+        \raggedleft\fontsize{8.2pt}{10pt}\selectfont\color{mutedColor}#2
+    \end{minipage}\par
+}
+
+\newcommand{\soloentrytitle}[1]{%
+    {\fontsize{10.2pt}{12.5pt}\selectfont\bfseries\color{primaryColor}#1}\par
+}
+
+\newcommand{\entrysubtitle}[1]{%
+    \vspace{1pt}
+    {\fontsize{8.8pt}{11pt}\selectfont\color{secondaryColor}#1}\par
+}
+
+% ---- Bullet list: 11pt indent, 2pt between items, 9.2pt / 1.26 lh ----
+\newenvironment{highlights}{
+    \vspace{4pt}
+    \begin{itemize}[
+        topsep=0pt,
+        parsep=0pt,
+        partopsep=0pt,
+        itemsep=2pt,
+        leftmargin=11pt,
+        label={\small\textbullet}
+    ]
+    \fontsize{9.2pt}{11.6pt}\selectfont\color{bulletColor}
+}{
+    \end{itemize}
+}
+
+% ---- Sidebar skill label / value pair ----
+\newcommand{\skillgroup}[2]{%
+    {\fontsize{7.8pt}{10pt}\selectfont\color{mutedColor}\letterspacedcaps{#1}}\par
+    \vspace{2pt}
+    {\fontsize{8.8pt}{11.4pt}\selectfont\color{bulletColor}#2}\par
+}
+
+\newcommand{\entrygap}{\vspace{11pt}}
+\newcommand{\sectiongap}{\vspace{16pt}}
 
 \begin{document}
-    \newcommand{\AND}{\unskip
-        \cleaders\copy\ANDbox\hskip\wd\ANDbox
-        \ignorespaces
-    }
-    \newsavebox\ANDbox
-    \sbox\ANDbox{$|$}
 
-    \begin{header}
-        \fontsize{25 pt}{25 pt}\selectfont Souvik De
+\begin{paracol}{2}
 
-        \vspace{5 pt}
+% =========================== SIDEBAR (col 1) ===========================
+\begin{adjustwidth}{24pt}{18pt}
 
-        \normalsize
-        \mbox{India}%
-        \kern 5.0 pt%
-        \AND%
-        \kern 5.0 pt%
-        \mbox{\hrefWithoutArrow{mailto:souvikde.tech@gmail.com}{souvikde.tech@gmail.com}}%
-        \kern 5.0 pt%
-        \AND%
-        \kern 5.0 pt%
-        \mbox{\hrefWithoutArrow{tel:+91-9073302976}{+91 9073302976}}%
-        \kern 5.0 pt%
-        \AND%
-        \kern 5.0 pt%
-        \mbox{\hrefWithoutArrow{https://souvik.de/}{souvik.de}}%
-        \kern 5.0 pt%
-        \AND%
-        \kern 5.0 pt%
-        \mbox{\hrefWithoutArrow{https://www.linkedin.com/in/souvik-de-a2b941169/}{linkedin}}%
-        \kern 5.0 pt%
-        \AND%
-        \kern 5.0 pt%
-        \mbox{\hrefWithoutArrow{https://github.com/Souvikns/}{github/Souvikns}}%
-    \end{header}
+{\fontsize{19pt}{21pt}\selectfont\bfseries\color{primaryColor}Souvik De}\par
+\vspace{7pt}
+{\color{accentColor}\rule{28pt}{2.2pt}}\par
+\vspace{12pt}
 
-    \vspace{0.2 cm}
+{\fontsize{8.8pt}{13pt}\selectfont\color{bulletColor}
+India\par
+\vspace{4pt}
+\hrefWithoutArrow{mailto:souvikde.tech@gmail.com}{souvikde.tech@gmail.com}\par
+\vspace{4pt}
+\hrefWithoutArrow{tel:+91-9073302976}{+91 9073302976}\par
+\vspace{4pt}
+\hrefWithoutArrow{https://souvik.de/}{souvik.de}\par
+\vspace{4pt}
+\hrefWithoutArrow{https://www.linkedin.com/in/souvik-de-a2b941169/}{linkedin}\par
+\vspace{4pt}
+\hrefWithoutArrow{https://github.com/Souvikns/}{github/Souvikns}\par
+}
 
+\vspace{16pt}
+\sectionhead{Technologies}
 
-    \section{Summary}
+\skillgroup{Languages}{JavaScript, TypeScript, Go, Python, SQL}
+\vspace{9pt}
+\skillgroup{Backend}{Node.js, FastAPI, Gin}
+\vspace{9pt}
+\skillgroup{AI Systems}{RAG Architectures, Vector Database(Qdrant), LLM Integration, Langchain, Ollama}
+\vspace{9pt}
+\skillgroup{Databases}{MySQL, Firebase}
+\vspace{9pt}
+\skillgroup{DevOps}{Docker, GitHub Actions, CI/CD}
 
+\end{adjustwidth}
 
+\switchcolumn
 
+% =========================== MAIN COLUMN (col 2) ===========================
+\begin{adjustwidth}{24pt}{32pt}
 
-        \begin{onecolentry}
-          Backend Software Engineer with 4+ years of experience building production AI infrastructure, distributed backend systems, and developer tooling. Experienced in designing RAG platforms, document ingestion pipelines, vector search systems, and LLM orchestration using Go, TypeScript, and Python. Former Postman engineer, AsyncAPI maintainer, and Google Summer of Code mentor with experience building open-source tools used by thousands of developers.
-        \end{onecolentry}
+{\fontsize{9.4pt}{13pt}\selectfont\color{bulletColor}
+Backend Software Engineer with 4+ years of experience building production AI infrastructure, distributed backend systems, and developer tooling. Experienced in designing RAG platforms, document ingestion pipelines, vector search systems, and LLM orchestration using Go, TypeScript, and Python. Former Postman engineer, AsyncAPI maintainer, and Google Summer of Code mentor with experience building open-source tools used by thousands of developers.
+}
 
+\sectiongap
+\sectionhead{Experience}
 
-    \section{Experience}
+\entryhead{Software Engineer II, XANE.AI -- Gurgaon}{July 2025 -- Present}
+\begin{highlights}
+    \item Built a multi-stage OCR $\rightarrow$ chunking $\rightarrow$ embedding $\rightarrow$ retrieval pipeline powering Maruti Suzuki’s AI assistant, enabling semantic search across thousands of vehicle manuals.
+    \item Designed and implemented an OCR-to-RAG ingestion pipeline converting unstructured PDFs into structured embeddings indexed in a vector database, enabling persistent knowledge memory for AI agents.
+    \item Designed and implemented a scalable RAG evaluation pipeline using Ragas, enabling systematic measurement of retrieval accuracy, answer relevance, and overall system performance.
+\end{highlights}
 
+\entrygap
+\entryhead{Lead Software Engineer, CodeMate.AI -- Noida}{December 2024 -- May 2025}
+\begin{highlights}
+    \item Engineered an enhanced search algorithm for Swagger files, optimizing RAG system performance and search precision.
+    \item Implemented CI/CD pipeline utilizing GitHub Actions to automate application release cycles, enhancing deployment efficiency and reliability.
+    \item Optimized a local server utilized by our VS Code extension, achieving over 30\% improvement in startup time and enhancing overall user experience.
+    \item Implemented automated deployment from GitHub Actions to a virtual machine (VM) and configured branch protection rules, improving code quality, deployment stability, and increasing team productivity by eliminating manual deployment efforts.
+\end{highlights}
 
-        \begin{twocolentry}{
-            July 2025 – Present
-        }
-            \textbf{Software Engineer II}, XANE.AI -- Gurgaon\end{twocolentry}
+\entrygap
+\entryhead{Software Engineer, Postman -- Bangalore}{Feb 2022 -- June 2024}
+\begin{highlights}
+    \item Developed and maintained a cross-platform CLI integrating official AsyncAPI tooling, providing a unified workflow for developers.
+    \item Created and maintained AsyncAPI Bundler (16,000+ downloads), enabling reliable resolution of complex json ref dependency graphs across specification files.
+    \item Served as maintainer across 3+ open-source projects, reviewing contributions, guiding architectural decisions, and driving roadmap initiatives.
+    \item Mentored contributors under Google Summer of Code (GSoC), guiding projects to production-ready completion.
+    \item Co-led governance initiative to standardize parser tooling architecture across multiple languages, improving maintainability and reducing duplication.
+\end{highlights}
 
-        \vspace{0.10 cm}
-        \begin{onecolentry}
-            \begin{highlights}
-                \item Built a multi-stage OCR → chunking → embedding → retrieval pipeline powering Maruti Suzuki’s AI assistant, enabling semantic search across thousands of vehicle manuals.
-                \item Designed and implemented an OCR-to-RAG ingestion pipeline converting unstructured PDFs into structured embeddings indexed in a vector database, enabling persistent knowledge memory for AI agents.
-                \item Designed and implemented a scalable RAG evaluation pipeline using Ragas, enabling systematic measurement of retrieval accuracy, answer relevance, and overall system performance.
+\entrygap
+\entryhead{Backend Developer Intern, Mage -- Remote}{Nov 2021 -- Feb 2022}
+\begin{highlights}
+    \item Built microservices in Go to automate cloud infrastructure provisioning using templated configuration systems.
+    \item Developed a React-based low-code interface for generating and provisioning infrastructure on demand.
+    \item Deployed containerized services using Docker and Kubernetes in cloud-native environments.
+\end{highlights}
 
-            \end{highlights}
-        \end{onecolentry}
+\sectiongap
+\sectionhead{Projects}
 
-        \begin{twocolentry}{
-            December 2024 – May 2025
-        }
-            \textbf{Lead Software Engineer}, CodeMate.AI -- Noida\end{twocolentry}
+\entryhead{Kitsu}{\hrefWithoutArrow{https://github.com/Souvikns/kitsu}{github}}
+\entrysubtitle{AI-powered GitHub Action for automated PR review summaries}
+\begin{highlights}
+    \item Built a GitHub Action that analyzes git patches using LLMs to generate concise pull request summaries.
+\end{highlights}
 
-        \vspace{0.10 cm}
-        \begin{onecolentry}
-            \begin{highlights}
-                \item Engineered an enhanced search algorithm for Swagger files, optimizing RAG system performance and search precision.
-                \item Implemented CI/CD pipeline utilizing GitHub Actions to automate application release cycles, enhancing deployment efficiency and reliability.
+\end{adjustwidth}
 
-                \item Optimized a local server utilized by our VS Code extension, achieving over 30\% improvement in startup time and enhancing overall user experience.
+\switchcolumn*
 
-                \item Implemented automated deployment from GitHub Actions to a virtual machine (VM) and configured branch protection rules, improving code quality, deployment stability, and increasing team productivity by eliminating manual deployment efforts.
+\begin{adjustwidth}{24pt}{18pt}
+\sectionhead{Education}
+\soloentrytitle{Chandigarh University}
+\entrysubtitle{BE in Computer Science}
+{\fontsize{8.2pt}{10pt}\selectfont\color{mutedColor}June 2018 -- June 2022}\par
+\begin{highlights}
+    \item \textbf{Coursework:} Data Structures \& Algorithms, Operating Systems, Computer Networks, Software Engineering, System Design
+\end{highlights}
+\end{adjustwidth}
 
-            \end{highlights}
-        \end{onecolentry}
+\switchcolumn
 
+\begin{adjustwidth}{24pt}{32pt}
 
-        \vspace{0.2 cm}
+\begin{highlights}
+    \item Handles large patch files by filtering low-signal changes and chunking oversized diffs.
+    \item Designed to run entirely inside GitHub Actions with minimal latency.
+\end{highlights}
 
-        \begin{twocolentry}{
-            Feb 2022 – June 2024
-        }
-            \textbf{Software Engineer}, Postman -- Bangalore\end{twocolentry}
+\entrygap
+\entryhead{Notion-Board}{\hrefWithoutArrow{https://github.com/Souvikns/Notion-Board}{github}}
+\entrysubtitle{GitHub Action to sync GitHub Issues to Notion Database}
+\begin{highlights}
+    \item Developed a GitHub Action to auto sync and update GitHub issues and its state with Notion Pages.
+    \item Earned recognition from the open-source community through project stars and valuable user feedback.
+    \item Tools Used: TypeScript, GitHub Actions.
+\end{highlights}
 
-        \vspace{0.10 cm}
-        \begin{onecolentry}
-            \begin{highlights}
-                \item Developed and maintained a cross-platform CLI integrating official AsyncAPI tooling, providing a unified workflow for developers.
-                \item Created and maintained AsyncAPI Bundler (16,000+ downloads), enabling reliable resolution of complex json ref dependency graphs across specification files.
-                \item Served as maintainer across 3+ open-source projects, reviewing contributions, guiding architectural decisions, and driving roadmap initiatives.
-                \item Mentored contributors under Google Summer of Code (GSoC), guiding projects to production-ready completion.
-                \item Co-led governance initiative to standardize parser tooling architecture across multiple languages, improving maintainability and reducing duplication.
+\entrygap
+\entryhead{AsyncAPI-RAG}{\hrefWithoutArrow{https://github.com/Souvikns/asyncapi-rag}{github}}
+\entrysubtitle{FastAPI application that scrapes AsyncAPI documentation to create a RAG system and provides a chat API to answer user queries.}
+\begin{highlights}
+    \item Built data scraper to scrape AsyncAPI spec and tools documentation from GitHub.
+    \item Used LangChain to chunk Markdown data, generated embeddings with the Nomic embed model from Ollama, stored embeddings in a Qdrant database, and exposed a REST API to handle user queries and return contextual answers.
+    \item Tools Used: Python, qdrant, Langchain, ollama, docker
+\end{highlights}
 
-            \end{highlights}
-        \end{onecolentry}
+\end{adjustwidth}
 
-        \vspace{0.2 cm}
-
-        \begin{twocolentry}{
-            Nov 2021 – Feb 2022
-        }
-            \textbf{Backend Developer Intern}, Mage -- Remote\end{twocolentry}
-
-        \vspace{0.10 cm}
-        \begin{onecolentry}
-            \begin{highlights}
-                \item Built microservices in Go to automate cloud infrastructure provisioning using templated configuration systems.
-                \item Developed a React-based low-code interface for generating and provisioning infrastructure on demand.
-                \item Deployed containerized services using Docker and Kubernetes in cloud-native environments.
-
-            \end{highlights}
-        \end{onecolentry}
-
-    \vspace{1 cm}
-
-    \section{Projects}
-
-        \begin{twocolentry}{
-            \href{https://github.com/Souvikns/kitsu}{Kitsu}
-        }
-            \textbf{AI-powered GitHub Action for automated PR review summaries}\end{twocolentry}
-
-        \vspace{0.10 cm}
-        \begin{onecolentry}
-            \begin{highlights}
-            \item Built a GitHub Action that analyzes git patches using LLMs to generate concise pull request summaries.
-            \item Handles large patch files by filtering low-signal changes and chunking oversized diffs.
-            \item Designed to run entirely inside GitHub Actions with minimal latency.
-
-            \end{highlights}
-        \end{onecolentry}
-
-        \begin{twocolentry}{
-            \href{https://github.com/Souvikns/Notion-Board}{Notion-Board}
-        }
-            \textbf{GitHub Action to sync GitHub Issues to Notion Database}\end{twocolentry}
-
-        \vspace{0.10 cm}
-        \begin{onecolentry}
-            \begin{highlights}
-                \item Developed a GitHub Action to auto sync and update GitHub issues and its state with Notion Pages.
-                \item Earned recognition from the open-source community through project stars and valuable user feedback.
-                \item Tools Used: TypeScript, GitHub Actions.
-
-            \end{highlights}
-        \end{onecolentry}
-
-
-        \begin{twocolentry}{
-            \href{https://github.com/Souvikns/asyncapi-rag}{AsyncAPI-RAG}
-        }
-            \textbf{FastAPI application that scrapes AsyncAPI documentation to create a RAG system and provides a chat API to answer user queries.}\end{twocolentry}
-
-        \vspace{0.10 cm}
-        \begin{onecolentry}
-            \begin{highlights}
-                \item Built data scraper to scrape AsyncAPI spec and tools documentation from GitHub.
-                \item Used LangChain to chunk Markdown data, generated embeddings with the Nomic embed model from Ollama, stored embeddings in a Qdrant database, and exposed a REST API to handle user queries and return contextual answers.
-                \item Tools Used: Python, qdrant, Langchain, ollama, docker
-
-            \end{highlights}
-        \end{onecolentry}
-
-
-    \section{Technologies}
-
-
-
-
-        \begin{onecolentry}
-            \textbf{Languages:} JavaScript, TypeScript, Go, Python, SQL
-        \end{onecolentry}
-
-        \vspace{0.2 cm}
-        \begin{onecolentry}
-            \textbf{Backend:} Node.js, FastAPI, Gin
-        \end{onecolentry}
-
-        \vspace{0.2 cm}
-        \begin{onecolentry}
-          \textbf{AI Systems:} RAG Architectures, Vector Database(Qdrant), LLM Integration, Langchain, Ollama
-        \end{onecolentry}
-
-        \vspace{0.2 cm}
-        \begin{onecolentry}
-          \textbf{Databases:} MySQL, Firebase
-        \end{onecolentry}
-
-        \vspace{0.2 cm}
-        \begin{onecolentry}
-          \textbf{DevOps:} Docker, GitHub Actions, CI/CD
-        \end{onecolentry}
-
-    \section{Education}
-
-
-        \begin{twocolentry}{
-            June 2018 – June 2022
-        }
-            \textbf{Chandigarh University}, BE in Computer Science\end{twocolentry}
-
-        \vspace{0.10 cm}
-        \begin{onecolentry}
-            \begin{highlights}
-                \item \textbf{Coursework:} Data Structures \& Algorithms, Operating Systems, Computer Networks, Software Engineering, System Design
-            \end{highlights}
-        \end{onecolentry}
-
-
-
-
+\end{paracol}
 
 \end{document}

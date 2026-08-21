@@ -20,6 +20,7 @@ jobs:
         uses: xu-cheng/latex-action@v2
         with:
           root_file: resume.tex
+          args: -pdfxe -file-line-error -halt-on-error -interaction=nonstopmode
         
       - name: Post Processing 
         run: |
