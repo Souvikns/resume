@@ -11,7 +11,8 @@
 ]{geometry}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{enumitem}
-\usepackage{amsmath}
+\usepackage{etoolbox}
+\usepackage{accsupp}
 \usepackage{tikz}
 \usepackage[
     pdftitle={Souvik De's CV},
@@ -48,7 +49,13 @@
     ItalicFont = *-It,
     BoldItalicFont = *-BoldIt,
 ]
-\newcommand{\letterspacedcaps}[1]{\addfontfeature{LetterSpace=18.0}\MakeUppercase{#1}}
+% Letterspacing inserts real kerns, so text extraction returns "P R OJ E C TS".
+% ActualText gives ATS parsers (and copy/paste) the clean string instead.
+\newcommand{\letterspacedcaps}[1]{%
+    \BeginAccSupp{method=escape,ActualText={#1}}%
+    {\addfontfeature{LetterSpace=18.0}\MakeUppercase{#1}}%
+    \EndAccSupp{}%
+}
 
 % Some settings:
 \raggedright
@@ -86,7 +93,7 @@
 % ---- Entry title + right-aligned date/link on one line ----
 \newlength{\entrysidewidth}
 \newcommand{\entryhead}[2]{%
-    \setlength{\entrysidewidth}{3.1cm}%
+    \setlength{\entrysidewidth}{3.2cm}%
     \noindent\begin{minipage}[t]{\dimexpr\linewidth-\entrysidewidth\relax}
         \raggedright\fontsize{10.2pt}{12.5pt}\selectfont\bfseries\color{primaryColor}#1
     \end{minipage}%
@@ -166,9 +173,11 @@ India\par
 \vspace{9pt}
 \skillgroup{Frontend}{React, Next.js}
 \vspace{9pt}
-\skillgroup{AI Systems}{RAG Architectures, Vector Database(Qdrant), LLM Integration, Langchain, Ollama, Ragas, DeepAgents, Claude, OpenAI, DeepEval, Langfuse, Mineru}
+\skillgroup{AI Systems}{RAG Architectures, Vector Search, LLM Integration, LangChain, DeepAgents, Ollama, Claude, OpenAI, MinerU}
 \vspace{9pt}
-\skillgroup{Databases}{MySQL, Firebase, Postgres, Redis}
+\skillgroup{LLM Evaluation}{Ragas, DeepEval, Langfuse}
+\vspace{9pt}
+\skillgroup{Databases}{Postgres, MySQL, Redis, Qdrant, Firebase}
 \vspace{9pt}
 \skillgroup{DevOps}{Docker, GitHub Actions, CI/CD}
 
@@ -186,15 +195,15 @@ Full-stack Software Engineer with 4+ years of experience, backend-focused, build
 \sectiongap
 \sectionhead{Professional Experience}
 
-\entryhead{Software Engineer II, XANE.AI -- Gurgaon}{July 2025 -- Present}
+\entryhead{Software Engineer II, XANE.AI -- Gurgaon}{Jul 2025 -- Present}
 \begin{highlights}
-    \item Built a multi-stage OCR $\rightarrow$ chunking $\rightarrow$ embedding $\rightarrow$ retrieval pipeline powering Maruti Suzuki’s AI assistant, replacing manual data entry and cutting content-preparation time to enable semantic search across thousands of vehicle manuals.
+    \item Built a multi-stage OCR → chunking → embedding → retrieval pipeline powering Maruti Suzuki’s AI assistant, replacing manual data entry and enabling semantic search across thousands of vehicle manuals.
     \item Architected an OCR-to-RAG ingestion flow converting unstructured PDFs into structured embeddings indexed in a vector database, giving AI agents persistent knowledge memory.
     \item Introduced a RAG evaluation framework on Ragas that surfaced an answer-relevance gap and drove it from 64\% to 89\%, accelerating the team’s iteration cycle on retrieval quality.
 \end{highlights}
 
 \entrygap
-\entryhead{Lead Software Engineer, CodeMate.AI -- Noida}{December 2024 -- May 2025}
+\entryhead{Lead Software Engineer, CodeMate.AI -- Noida}{Dec 2024 -- May 2025}
 \begin{highlights}
     \item Engineered an enhanced search algorithm for Swagger files, improving search precision by 10-20\% and RAG system performance.
     \item Set up a CI/CD pipeline with GitHub Actions to automate release cycles across macOS, Linux, and Windows, making cross-platform deployments faster and more reliable.
@@ -203,10 +212,10 @@ Full-stack Software Engineer with 4+ years of experience, backend-focused, build
 \end{highlights}
 
 \entrygap
-\entryhead{Software Engineer, Postman -- Bangalore}{Feb 2022 -- June 2024}
+\entryhead{Software Engineer, Postman -- Bangalore}{Feb 2022 -- Jun 2024}
 \begin{highlights}
     \item Built and maintained a cross-platform CLI integrating official AsyncAPI tooling (20,000+ downloads), giving developers a unified workflow.
-    \item Shipped AsyncAPI Bundler (16,000+ downloads), resolving complex json ref dependency graphs spanning specification files.
+    \item Shipped AsyncAPI Bundler (16,000+ downloads), resolving complex JSON \$ref dependency graphs spanning specification files.
     \item Served as maintainer across 3+ open-source projects, reviewing 185+ PRs, promoting two contributors to maintainers, and guiding architectural roadmap decisions.
     \item Mentored 3-5 contributors through Google Summer of Code (GSoC), taking their projects from proposal to production-ready completion.
     \item Co-led governance initiative to standardize parser tooling architecture across multiple languages, improving maintainability and reducing duplication.
@@ -221,7 +230,7 @@ Full-stack Software Engineer with 4+ years of experience, backend-focused, build
 \end{highlights}
 
 \entrygap
-\entryhead{Maintainer, AsyncAPI Initiative -- Remote}{Sept 2021 -- Present}
+\entryhead{Maintainer, AsyncAPI Initiative -- Remote}{Sep 2021 -- Present}
 \begin{highlights}
     \item Joined AsyncAPI as a contributor and built out the CLI from an early, largely non-functional skeleton into the project's official command-line tool.
     \item Built AsyncAPI Bundler for AsyncAPI Hackathon 2021, winning \hrefWithoutArrow{https://github.com/orgs/asyncapi/discussions/165}{first place} (\$5,000 prize), then donated the project to AsyncAPI.
@@ -236,7 +245,7 @@ Full-stack Software Engineer with 4+ years of experience, backend-focused, build
 \sectionhead{Education}
 \soloentrytitle{Chandigarh University}
 \entrysubtitle{BE in Computer Science}
-{\fontsize{8.2pt}{10pt}\selectfont\color{mutedColor}June 2018 -- June 2022}\par
+{\fontsize{8.2pt}{10pt}\selectfont\color{mutedColor}Jun 2018 -- Jun 2022}\par
 \begin{highlights}
     \item \textbf{Coursework:} Data Structures \& Algorithms, Operating Systems, Computer Networks, Software Engineering, System Design
 \end{highlights}
@@ -272,7 +281,7 @@ Full-stack Software Engineer with 4+ years of experience, backend-focused, build
 \begin{highlights}
     \item Built data scraper to scrape AsyncAPI spec and tools documentation from GitHub.
     \item Used LangChain to chunk Markdown data, generated embeddings with the Nomic embed model from Ollama, stored embeddings in a Qdrant database, and exposed a REST API to handle user queries and return contextual answers.
-    \item Tools Used: Python, qdrant, Langchain, ollama, docker
+    \item Tools Used: Python, Qdrant, LangChain, Ollama, Docker.
 \end{highlights}
 
 \end{adjustwidth}
