@@ -51,6 +51,9 @@
 ]
 % Letterspacing inserts real kerns, so text extraction returns "P R OJ E C TS".
 % ActualText gives ATS parsers (and copy/paste) the clean string instead.
+% A catcode-12 "&": typesets like \& but is also copied out verbatim inside
+% the ActualText strings below (a real \& would extract as the literal "\&").
+{\catcode`\&=12 \gdef\ampchar{& }}
 \newcommand{\letterspacedcaps}[1]{%
     \BeginAccSupp{method=escape,ActualText={#1}}%
     {\addfontfeature{LetterSpace=18.0}\MakeUppercase{#1}}%
@@ -173,7 +176,7 @@ India\par
 \vspace{9pt}
 \skillgroup{Frontend}{React, Next.js}
 \vspace{9pt}
-\skillgroup{AI Systems}{RAG Architectures, Vector Search, LLM Integration, LangChain, DeepAgents, Ollama, Claude, OpenAI, MinerU}
+\skillgroup{AI Systems \ampchar Developer Tools}{RAG Architectures, Vector Search, LLM Integration, LangChain, DeepAgents, Ollama, Claude, Claude~Code, opencode, code, OpenAI, MinerU}
 \vspace{9pt}
 \skillgroup{LLM Evaluation}{Ragas, DeepEval, Langfuse}
 \vspace{9pt}
