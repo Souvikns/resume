@@ -1,304 +1,121 @@
-\documentclass[10pt, letterpaper]{article}
-
-% Packages:
-\usepackage[
-    ignoreheadfoot,
-    top=36pt,
-    bottom=30pt,
-    left=0pt,
-    right=0pt,
-    footskip=0pt,
-]{geometry}
-\usepackage[dvipsnames]{xcolor}
+\documentclass[10pt,a4paper]{article}
+% Single-column, ATS-friendly layout: no tables, no sidebars, real text everywhere.
+% v2 (13 Nov 2026): bullets rewritten result-first (accomplished X, measured by Y, by doing Z).
+% v3 (14 Nov 2026): all placeholders filled from Souvik's answers.
+% v5 (14 Nov 2026): XANE agent work added; second proofread, semicolon joins and repeated openers removed.
+% v4 (14 Nov 2026): proofread; varied bullet shapes, dropped filler, summary no longer claims 4+ years of LLM work.
+\usepackage[T1]{fontenc}
+\usepackage{charter}
+\usepackage[left=0.5in,right=0.5in,top=0.32in,bottom=0.32in]{geometry}
 \usepackage{enumitem}
-\usepackage{etoolbox}
-\usepackage{accsupp}
-\usepackage{tikz}
-\usepackage[
-    pdftitle={Souvik De's CV},
-    pdfauthor={Souvik De},
-    pdfcreator={LaTeX},
-    colorlinks=true,
-]{hyperref}
-\usepackage[pscoord]{eso-pic}
-\usepackage{calc}
-\usepackage{bookmark}
-\usepackage{changepage}
-\usepackage{paracol}
-\usepackage{needspace}
-\usepackage{fontspec}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
 
-% ---- Palette (RESUME-SPEC.md) ----
-\definecolor{primaryColor}{HTML}{1B1A16}   % body text
-\definecolor{bulletColor}{HTML}{33312B}    % bullet text
-\definecolor{secondaryColor}{HTML}{4F4C44} % company / place lines
-\definecolor{mutedColor}{HTML}{85806F}     % dates, sidebar labels
-\definecolor{sidebarTint}{HTML}{F2EFE8}    % sidebar background
-\definecolor{accentColor}{HTML}{3B6BB0}    % section heads, name rule, links
-
-\hypersetup{urlcolor=accentColor, linkcolor=accentColor}
-
-% ---- Fonts: Source Sans 3 (successor to Source Sans Pro), bundled in
-% fonts/ so the build doesn't depend on what's installed on the machine
-% or CI runner. Requires xelatex or lualatex (see fonts/README.md). ----
-\setmainfont{SourceSans3}[
-    Path = fonts/,
-    Extension = .otf,
-    UprightFont = *-Regular,
-    BoldFont = *-Bold,
-    ItalicFont = *-It,
-    BoldItalicFont = *-BoldIt,
-]
-% Letterspacing inserts real kerns, so text extraction returns "P R OJ E C TS".
-% ActualText gives ATS parsers (and copy/paste) the clean string instead.
-% A catcode-12 "&": typesets like \& but is also copied out verbatim inside
-% the ActualText strings below (a real \& would extract as the literal "\&").
-{\catcode`\&=12 \gdef\ampchar{& }}
-\newcommand{\letterspacedcaps}[1]{%
-    \BeginAccSupp{method=escape,ActualText={#1}}%
-    {\addfontfeature{LetterSpace=18.0}\MakeUppercase{#1}}%
-    \EndAccSupp{}%
-}
-
-% Some settings:
-\raggedright
-\AtBeginEnvironment{adjustwidth}{\partopsep0pt}
+\definecolor{ink}{HTML}{1F3864}
 \pagestyle{empty}
-\setcounter{secnumdepth}{0}
 \setlength{\parindent}{0pt}
-\setlength{\topskip}{0pt}
-\pagenumbering{gobble}
+\setlength{\parskip}{0pt}
+\linespread{0.98}
+\makeatletter\renewcommand\normalsize{\@setfontsize\normalsize{9.2pt}{10.7pt}}\makeatother\normalsize
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\sloppy
 
-\let\hrefWithoutArrow\href
+\titleformat{\section}{\color{ink}\bfseries\large}{}{0pt}{}[\vspace{-6pt}\color{ink}\rule{\linewidth}{0.5pt}]
+\titlespacing*{\section}{0pt}{3pt}{1pt}
 
-% ---- Sidebar geometry ----
-\newlength{\sidebarwidth}
-\setlength{\sidebarwidth}{0.287\paperwidth}
-\columnratio{0.287}
-\setlength{\columnsep}{0pt}
-\setlength{\columnseprule}{0pt}
+\setlist[itemize]{leftmargin=1.1em,itemsep=0.2pt,parsep=0pt,topsep=1pt,label=\textbullet}
 
-% Paint the sidebar tint full-bleed, full page height, on every page.
-\AddToShipoutPictureBG{%
-    \begin{tikzpicture}[remember picture, overlay]
-        \fill[sidebarTint] (current page.north west) rectangle
-            ++(\sidebarwidth, -\paperheight);
-    \end{tikzpicture}%
+\newcommand{\role}[4]{%
+  \textbf{#1}, #2 {\small\itshape | #3} \hfill #4\par\vspace{1pt}}
+\newcommand{\project}[3]{%
+  \textbf{#1} \textbar{} {\small #2} \hfill {\small #3}\par}
+
+\hypersetup{
+  pdftitle={Souvik De - Software Engineer, AI Systems},
+  pdfauthor={Souvik De},
+  pdfkeywords={AI Engineer, LLM, RAG, AI Agents, MCP, Mastra, LangGraph, LangChain, Python, Go, TypeScript, Qdrant, RAGAS, Langfuse, Docker, Kubernetes}
 }
-
-% ---- Section head: 7.6pt bold uppercase letterspaced accent ----
-\newcommand{\sectionhead}[1]{%
-    \needspace{3\baselineskip}%
-    {\fontsize{7.6pt}{9pt}\selectfont\bfseries\color{accentColor}\letterspacedcaps{#1}}\par
-    \vspace{7pt}%
-}
-
-% ---- Entry title + right-aligned date/link on one line ----
-\newlength{\entrysidewidth}
-\newcommand{\entryhead}[2]{%
-    \setlength{\entrysidewidth}{3.2cm}%
-    \noindent\begin{minipage}[t]{\dimexpr\linewidth-\entrysidewidth\relax}
-        \raggedright\fontsize{10.2pt}{12.5pt}\selectfont\bfseries\color{primaryColor}#1
-    \end{minipage}%
-    \hfill
-    \begin{minipage}[t]{\entrysidewidth}
-        \raggedleft\fontsize{8.2pt}{10pt}\selectfont\color{mutedColor}#2
-    \end{minipage}\par
-}
-
-\newcommand{\soloentrytitle}[1]{%
-    {\fontsize{10.2pt}{12.5pt}\selectfont\bfseries\color{primaryColor}#1}\par
-}
-
-\newcommand{\entrysubtitle}[1]{%
-    \vspace{1pt}
-    {\fontsize{8.8pt}{11pt}\selectfont\color{secondaryColor}#1}\par
-}
-
-% ---- Bullet list: 11pt indent, 2pt between items, 9.2pt / 1.26 lh ----
-\newenvironment{highlights}{
-    \vspace{4pt}
-    \begin{itemize}[
-        topsep=0pt,
-        parsep=0pt,
-        partopsep=0pt,
-        itemsep=2pt,
-        leftmargin=11pt,
-        label={\small\textbullet}
-    ]
-    \fontsize{9.2pt}{11.6pt}\selectfont\color{bulletColor}
-}{
-    \end{itemize}
-}
-
-% ---- Sidebar skill label / value pair ----
-\newcommand{\skillgroup}[2]{%
-    {\fontsize{7.8pt}{10pt}\selectfont\color{mutedColor}\letterspacedcaps{#1}}\par
-    \vspace{2pt}
-    {\fontsize{8.8pt}{11.4pt}\selectfont\color{bulletColor}#2}\par
-}
-
-\newcommand{\entrygap}{\vspace{11pt}}
-\newcommand{\sectiongap}{\vspace{16pt}}
 
 \begin{document}
 
-\begin{paracol}{2}
+\begin{center}
+  {\LARGE\bfseries Souvik De}\\[3pt]
+  {\large Software Engineer, AI Systems \textbar{} LLMs $\cdot$ RAG $\cdot$ AI Agents $\cdot$ Backend}\\[3pt]
+  {\small Gurugram (Delhi NCR), India \textbar{} Open to remote
+  \textbar{} +91 98305 05728
+  \textbar{} \href{mailto:souvikde.tech@gmail.com}{souvikde.tech@gmail.com}\\
+  \href{https://souvik.de/}{souvik.de}
+  \textbar{} \href{https://www.linkedin.com/in/souvik-de-a2b941169/}{linkedin.com/in/souvik-de-a2b941169}
+  \textbar{} \href{https://github.com/Souvikns/}{github.com/Souvikns}}
+\end{center}
 
-% =========================== SIDEBAR (col 1) ===========================
-\begin{adjustwidth}{24pt}{18pt}
+\section{Summary}
+Software engineer with 4+ years in backend and developer tooling, now building production LLM systems in Python, Go and TypeScript. At XANE.AI I work on the agent behind Maruti Suzuki's AI assistant, where adding evals to CI helped take answer relevance from 64\% to 89\%. I also maintain AsyncAPI tools with 36,000+ downloads, wrote the project's MCP server and mentor for Google Summer of Code.
 
-{\fontsize{19pt}{21pt}\selectfont\bfseries\color{primaryColor}Souvik De}\par
-\vspace{7pt}
-{\color{accentColor}\rule{28pt}{2.2pt}}\par
-\vspace{12pt}
+\section{Skills}
+\begin{itemize}[label={},leftmargin=0pt,itemsep=1pt]
+  \item \textbf{Languages:} Python, Go, TypeScript, JavaScript (Node.js), SQL
+  \item \textbf{LLMs \& agents:} RAG (hybrid search, reranking, chunking, embeddings), tool calling, MCP, multimodal (vision) inputs, Mastra, LangGraph, LangChain, deepagents, OpenAI, Claude, Ollama, MinerU OCR
+  \item \textbf{Evaluation \& observability:} RAGAS, DeepEval, evals in CI, Langfuse tracing
+  \item \textbf{Backend \& data:} REST / OpenAPI design, FastAPI, Gin, Qdrant, PostgreSQL
+  \item \textbf{Infrastructure, cloud \& frontend:} AWS (EC2, S3, RDS, Bedrock, SageMaker, CloudFront, Route 53, API Gateway), Azure, Docker, Kubernetes, GitHub Actions CI/CD, Linux, React
+\end{itemize}
 
-{\fontsize{8.8pt}{13pt}\selectfont\color{bulletColor}
-India\par
-\vspace{4pt}
-\hrefWithoutArrow{mailto:souvikde.tech@gmail.com}{souvikde.tech@gmail.com}\par
-\vspace{4pt}
-\hrefWithoutArrow{tel:+91-9830505728}{+91 9830505728}\par
-\vspace{4pt}
-\hrefWithoutArrow{https://souvik.de/}{souvik.de}\par
-\vspace{4pt}
-\hrefWithoutArrow{https://www.linkedin.com/in/souvik-de-a2b941169/}{linkedin}\par
-\vspace{4pt}
-\hrefWithoutArrow{https://github.com/Souvikns/}{github/Souvikns}\par
-}
+\section{Experience}
+\role{Software Engineer II}{XANE.AI}{Gurugram, India}{Jul 2025 -- Present}
+\begin{itemize}
+  \item Built the Mastra agent behind Maruti Suzuki's AI assistant, which handles 100,000+ queries a day from 4.37M+ users across 34 vehicle models. It began as a RAG system over vehicle manuals and now also checks insurance policy status, handles renewals and quotes, and finds and books workshops.
+  \item For retrieval, manuals go through MinerU OCR instead of manual data entry and are then chunked, embedded and searched in Qdrant with hybrid search and reranking.
+  \item Built a separate deepagents system that sorts raw OCR output into CRM records.
+  \item Added RAGAS evals on a golden set to CI (GitHub Actions) to flag quality regressions and set up self-hosted Langfuse for tracing. Answer relevance rose from 64\% to 89\%.
+  \item Routed customer photos of car parts to a vision model whose output drives retrieval, and attached provenance metadata to every chunk so answers cite their sources.
+  \item Deployed it on AWS, with Bedrock for the assistant's LLM and the part-identification vision model, EC2 for the backend, and S3 and RDS for vehicle manuals and metadata.
+\end{itemize}
 
-\vspace{16pt}
-\sectionhead{Technologies}
+\role{Lead Software Engineer}{CodeMate.AI}{Noida, India}{Dec 2024 -- May 2025}
+\begin{itemize}
+  \item Wrote a custom search algorithm for retrieval over Swagger/OpenAPI specs that improved precision in the RAG system.
+  \item Cut startup time of the VS Code extension's local server by over 30\% by loading models in the background instead of at boot.
+  \item Set up GitHub Actions CI/CD for macOS, Linux and Windows releases and automated deploys to an Azure production VM, saving the team 2--5 hours of release work a week.
+  \item Led a two-engineer team working on the local server and VS Code extension.
+\end{itemize}
 
-\skillgroup{Languages}{JavaScript, TypeScript, Go, Python, SQL}
-\vspace{9pt}
-\skillgroup{Backend}{Node.js, FastAPI, Gin}
-\vspace{9pt}
-\skillgroup{Frontend}{React, Next.js}
-\vspace{9pt}
-\skillgroup{AI Systems \ampchar Developer Tools}{RAG Architectures, Vector Search, LLM Integration, LangChain, DeepAgents, Ollama, Claude, Claude~Code, opencode, code, OpenAI, MinerU}
-\vspace{9pt}
-\skillgroup{LLM Evaluation}{Ragas, DeepEval, Langfuse}
-\vspace{9pt}
-\skillgroup{Databases}{Postgres, MySQL, Redis, Qdrant, Firebase}
-\vspace{9pt}
-\skillgroup{DevOps}{Docker, GitHub Actions, CI/CD}
+\role{Software Engineer}{Postman}{Bangalore, India}{Feb 2022 -- Jun 2024}
+\begin{itemize}
+  \item Took the official AsyncAPI CLI from an early skeleton to the standard tool for the spec (20,000+ downloads), putting the project's separate tools behind one command.
+  \item Shipped AsyncAPI Bundler (16,000+ downloads), which resolves JSON \$ref references across specification files into a single document.
+  \item Maintained 3+ open-source projects, reviewed 185+ pull requests and brought two contributors up to maintainer.
+  \item Mentored 3--5 Google Summer of Code contributors and co-led an effort to standardize parsers across languages.
+\end{itemize}
 
-\end{adjustwidth}
+\role{Maintainer}{AsyncAPI Initiative}{Remote, Linux Foundation project}{Sep 2021 -- Present}
+\begin{itemize}
+  \item Built asyncapi-mcp, an MCP server with four tools that lets AI agents work with AsyncAPI documents (Apache 2.0).
+  \item Won the AsyncAPI Hackathon 2021 (\$5,000 prize) with the Bundler, donated the project to AsyncAPI and still maintain it.
+\end{itemize}
 
-\switchcolumn
+\role{Backend Developer Intern}{Mage}{Remote}{Nov 2021 -- Feb 2022}
+\begin{itemize}
+  \item Built Go microservices that provision cloud infrastructure from templated configuration and a React low-code interface for them, deployed with Docker and Kubernetes.
+\end{itemize}
 
-% =========================== MAIN COLUMN (col 2) ===========================
-\begin{adjustwidth}{24pt}{32pt}
+\section{Projects}
+\project{angelone-mcp}{TypeScript, Bun, MCP, WebSockets}{\href{https://github.com/Souvikns/angelone-mcp}{github.com/Souvikns/angelone-mcp}}
+\begin{itemize}
+  \item MCP server that connects Claude to an Angel One brokerage account (portfolio, orders, live market data), used on a live account to automate investing. Orders Claude proposes are sent only after approval in a desktop dialog.
+\end{itemize}
+\project{JobScout}{Go, Wails, LLMs, scrapers}{\href{https://findmejob.xyz}{findmejob.xyz}}
+\begin{itemize}
+  \item Cross-platform desktop app that uses LLMs to match job seekers with openings. Wellfound and Greenhouse scrapers refresh listings every 6 hours into a self-hosted backend.
+\end{itemize}
+\project{Kitsu}{LangGraph, deepagents, GitHub Actions}{\href{https://github.com/Souvikns/kitsu}{github.com/Souvikns/kitsu}}
+\begin{itemize}
+  \item AI agent packaged as a GitHub Action that reviews pull requests and writes summaries. It filters out low-signal changes and chunks large diffs to fit context limits.
+\end{itemize}
 
-{\fontsize{9.4pt}{13pt}\selectfont\color{bulletColor}
-Backend Engineer with 4+ years of experience, building production AI infrastructure, distributed backend systems, and developer tooling. Experienced in designing RAG platforms, document ingestion pipelines, vector search systems, and LLM orchestration using Go, TypeScript, and Python. Former Postman engineer, AsyncAPI maintainer, and Google Summer of Code mentor with experience building open-source tools used by thousands of developers.
-}
-
-\sectiongap
-\sectionhead{Professional Experience}
-
-\entryhead{Software Engineer II, XANE.AI -- Gurgaon}{Jul 2025 -- Present}
-\begin{highlights}
-    \item Built a multi-stage OCR → chunking → embedding → retrieval pipeline powering Maruti Suzuki’s AI assistant, replacing manual data entry and enabling semantic search across thousands of vehicle manuals.
-    \item Architected an OCR-to-RAG ingestion flow converting unstructured PDFs into structured embeddings indexed in a vector database, giving AI agents persistent knowledge memory.
-    \item Introduced a RAG evaluation framework on Ragas that surfaced an answer-relevance gap and drove it from 64\% to 89\%, accelerating the team’s iteration cycle on retrieval quality.
-\end{highlights}
-
-\entrygap
-\entryhead{Lead Software Engineer, CodeMate.AI -- Noida}{Dec 2024 -- May 2025}
-\begin{highlights}
-    \item Engineered an enhanced search algorithm for Swagger files, improving search precision by 10-20\% and RAG system performance.
-    \item Set up a CI/CD pipeline with GitHub Actions to automate release cycles across macOS, Linux, and Windows, making cross-platform deployments faster and more reliable.
-    \item Optimized a local server used by our VS Code extension, cutting startup time by over 30\% and improving the developer experience.
-    \item Automated deployment from GitHub Actions to a production VM and configured branch protection rules, improving code quality and release stability while saving the team 2-5 hours per week of manual release work.
-\end{highlights}
-
-\entrygap
-\entryhead{Software Engineer, Postman -- Bangalore}{Feb 2022 -- Jun 2024}
-\begin{highlights}
-    \item Built and maintained a cross-platform CLI integrating official AsyncAPI tooling (20,000+ downloads), giving developers a unified workflow.
-    \item Shipped AsyncAPI Bundler (16,000+ downloads), resolving complex JSON \$ref dependency graphs spanning specification files.
-    \item Served as maintainer across 3+ open-source projects, reviewing 185+ PRs, promoting two contributors to maintainers, and guiding architectural roadmap decisions.
-    \item Mentored 3-5 contributors through Google Summer of Code (GSoC), taking their projects from proposal to production-ready completion.
-    \item Co-led governance initiative to standardize parser tooling architecture across multiple languages, improving maintainability and reducing duplication.
-\end{highlights}
-
-\entrygap
-\entryhead{Backend Developer Intern, Mage -- Remote}{Nov 2021 -- Feb 2022}
-\begin{highlights}
-    \item Built microservices in Go to automate cloud infrastructure provisioning using templated configuration systems.
-    \item Developed a React-based low-code interface for generating and provisioning infrastructure on demand.
-    \item Deployed containerized services using Docker and Kubernetes in cloud-native environments.
-\end{highlights}
-
-\entrygap
-\entryhead{Maintainer, AsyncAPI Initiative -- Remote}{Sep 2021 -- Present}
-\begin{highlights}
-    \item Joined AsyncAPI as a contributor and built out the CLI from an early, largely non-functional skeleton into the project's official command-line tool.
-    \item Built AsyncAPI Bundler for AsyncAPI Hackathon 2021, winning \hrefWithoutArrow{https://github.com/orgs/asyncapi/discussions/165}{first place} (\$5,000 prize), then donated the project to AsyncAPI.
-    \item Continued as a core maintainer after leaving Postman in 2024, reviewing contributions and guiding the roadmap independent of any employer.
-\end{highlights}
-
-\end{adjustwidth}
-
-\switchcolumn*
-
-\begin{adjustwidth}{24pt}{18pt}
-\sectionhead{Education}
-\soloentrytitle{Chandigarh University}
-\entrysubtitle{BE in Computer Science}
-{\fontsize{8.2pt}{10pt}\selectfont\color{mutedColor}Jun 2018 -- Jun 2022}\par
-\begin{highlights}
-    \item \textbf{Coursework:} Data Structures \& Algorithms, Operating Systems, Computer Networks, Software Engineering, System Design
-\end{highlights}
-\end{adjustwidth}
-
-\switchcolumn
-
-\begin{adjustwidth}{24pt}{32pt}
-
-\vspace{\baselineskip}
-\sectionhead{Projects}
-
-\entryhead{JobScout}{\hrefWithoutArrow{https://findmejob.xyz}{findmejob.xyz}}
-\entrysubtitle{AI-powered cross-platform desktop application that helps job seekers find relevant jobs}
-\begin{highlights}
-    \item Built and launched a desktop app for macOS, Windows, and Linux with Wails (Go backend, Vite frontend) that uses LLMs to match job seekers with relevant openings; 12 active users since launch.
-    \item Built scrapers for Wellfound and Greenhouse, run by a 6-hour cron job that loads fresh listings into the database.
-    \item Self-host the entire backend on a personal ThinkPad exposed through Cloudflare Tunnel, handling infrastructure, deployment, and uptime at zero cost to me or the users.
-\end{highlights}
-
-\entrygap
-
-\entryhead{Kitsu}{\hrefWithoutArrow{https://github.com/Souvikns/kitsu}{github}}
-\entrysubtitle{AI-powered GitHub Action for automated PR review summaries}
-\begin{highlights}
-    \item Built a GitHub Action that analyzes git patches using LLMs to generate concise pull request summaries.
-    \item Handles large patch files by filtering low-signal changes and chunking oversized diffs.
-    \item Designed to run entirely inside GitHub Actions with minimal latency.
-\end{highlights}
-
-\entrygap
-\entryhead{Notion-Board}{\hrefWithoutArrow{https://github.com/Souvikns/Notion-Board}{github}}
-\entrysubtitle{GitHub Action to sync GitHub Issues to Notion Database}
-\begin{highlights}
-    \item Developed a GitHub Action to auto sync and update GitHub issues and its state with Notion Pages.
-    \item Earned recognition from the open-source community through project stars and valuable user feedback.
-    \item Tools Used: TypeScript, GitHub Actions.
-\end{highlights}
-
-\entrygap
-\entryhead{AsyncAPI-RAG}{\hrefWithoutArrow{https://github.com/Souvikns/asyncapi-rag}{github}}
-\entrysubtitle{FastAPI application that scrapes AsyncAPI documentation to create a RAG system and provides a chat API to answer user queries.}
-\begin{highlights}
-    \item Built data scraper to scrape AsyncAPI spec and tools documentation from GitHub.
-    \item Used LangChain to chunk Markdown data, generated embeddings with the Nomic embed model from Ollama, stored embeddings in a Qdrant database, and exposed a REST API to handle user queries and return contextual answers.
-    \item Tools Used: Python, Qdrant, LangChain, Ollama, Docker.
-\end{highlights}
-
-\end{adjustwidth}
-
-\end{paracol}
+\section{Education}
+\textbf{Chandigarh University} \textbar{} B.E., Computer Science \hfill Jun 2018 -- Jun 2022
 
 \end{document}
